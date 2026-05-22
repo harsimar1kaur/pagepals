@@ -9,12 +9,12 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { router } from "expo-router";
 
 type BookResult = {
   key: string;
   title: string;
   author_name?: string[];
-  first_publish_year?: number;
   cover_i?: number;
 };
 
@@ -22,26 +22,41 @@ export default function SearchScreen() {
   const [searchText, setSearchText] = useState("");
   const [books, setBooks] = useState<BookResult[]>([]);
   const [loading, setLoading] = useState(false);
+  const [searched, setSearched] = useState(false);
 
   async function searchBooks() {
-    if (!searchText.trim()) {
-      return;
-    }
+    const trimmedSearch = searchText.trim();
+
+    if (!trimmedSearch) return;
 
     setLoading(true);
+    setSearched(true);
 
     try {
       const response = await fetch(
-        `https://openlibrary.org/search.json?q=${encodeURIComponent(searchText)}`
+        `https://openlibrary.org/search.json?title=${encodeURIComponent(trimmedSearch)}`
       );
 
       const data = await response.json();
-      setBooks(data.docs.slice(0, 20));
+      setBooks(data.docs.slice(0, 10));
     } catch (error) {
       console.log("Search error:", error);
+      setBooks([]);
     } finally {
       setLoading(false);
     }
+  }
+
+  function openBook(item: BookResult) {
+    router.push({
+      pathname: "/book-details",
+      params: {
+        key: item.key,
+        title: item.title,
+        author: item.author_name?.[0] ?? "Unknown Author",
+        coverId: item.cover_i?.toString() ?? "",
+      },
+    });
   }
 
   return (
@@ -50,7 +65,7 @@ export default function SearchScreen() {
 
       <TextInput
         style={styles.input}
-        placeholder="Search by title or author"
+        placeholder="Search for a book"
         placeholderTextColor="#7A927B"
         value={searchText}
         onChangeText={setSearchText}
@@ -63,16 +78,20 @@ export default function SearchScreen() {
 
       {loading && <ActivityIndicator size="large" color="#3F6F44" />}
 
+      {!loading && searched && books.length === 0 && (
+        <Text style={styles.noResults}>No results found</Text>
+      )}
+
       <FlatList
         data={books}
         keyExtractor={(item) => item.key}
         contentContainerStyle={styles.list}
         renderItem={({ item }) => (
-          <View style={styles.card}>
+          <Pressable style={styles.bookCard} onPress={() => openBook(item)}>
             {item.cover_i ? (
               <Image
                 source={{
-                  uri: `https://covers.openlibrary.org/b/id/${item.cover_i}-M.jpg`,
+                  uri: `https://covers.openlibrary.org/b/id/${item.cover_i}-S.jpg`,
                 }}
                 style={styles.cover}
               />
@@ -84,16 +103,11 @@ export default function SearchScreen() {
 
             <View style={styles.bookInfo}>
               <Text style={styles.bookTitle}>{item.title}</Text>
-
               <Text style={styles.bookAuthor}>
                 {item.author_name?.[0] ?? "Unknown Author"}
               </Text>
-
-              <Text style={styles.bookYear}>
-                {item.first_publish_year ?? "Unknown Year"}
-              </Text>
             </View>
-          </View>
+          </Pressable>
         )}
       />
     </View>
@@ -107,7 +121,6 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 60,
   },
-
   title: {
     fontSize: 38,
     fontWeight: "800",
@@ -115,7 +128,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 20,
   },
-
   input: {
     backgroundColor: "#F6FFF2",
     borderRadius: 18,
@@ -124,7 +136,6 @@ const styles = StyleSheet.create({
     color: "#3F6F44",
     marginBottom: 12,
   },
-
   button: {
     backgroundColor: "#4F7A4F",
     paddingVertical: 14,
@@ -132,68 +143,59 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 20,
   },
-
   buttonText: {
     color: "white",
     fontSize: 18,
     fontWeight: "700",
   },
-
+  noResults: {
+    textAlign: "center",
+    color: "#526B55",
+    fontSize: 18,
+    marginTop: 20,
+  },
   list: {
     paddingBottom: 100,
   },
-
-  card: {
+  bookCard: {
     backgroundColor: "#F6FFF2",
     borderRadius: 18,
     padding: 12,
     marginBottom: 12,
     flexDirection: "row",
+    alignItems: "center",
   },
-
   cover: {
-    width: 70,
-    height: 105,
-    borderRadius: 10,
+    width: 60,
+    height: 90,
+    borderRadius: 8,
     marginRight: 14,
   },
-
   noCover: {
-    width: 70,
-    height: 105,
-    borderRadius: 10,
+    width: 60,
+    height: 90,
+    borderRadius: 8,
     marginRight: 14,
     backgroundColor: "#D7EFD3",
     alignItems: "center",
     justifyContent: "center",
   },
-
   noCoverText: {
     color: "#5C765F",
-    fontSize: 12,
+    fontSize: 11,
     textAlign: "center",
   },
-
   bookInfo: {
     flex: 1,
-    justifyContent: "center",
   },
-
   bookTitle: {
     fontSize: 18,
     fontWeight: "800",
     color: "#3F6F44",
     marginBottom: 6,
   },
-
   bookAuthor: {
     fontSize: 15,
     color: "#526B55",
-    marginBottom: 4,
-  },
-
-  bookYear: {
-    fontSize: 14,
-    color: "#7A927B",
   },
 });
