@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {
     ActivityIndicator,
@@ -56,6 +56,13 @@ export default function BookDetailsScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <Pressable
+        style={styles.backButton}
+        onPress={() => router.back()}
+      >
+        <Text style={styles.backButtonText}>← Back</Text>
+      </Pressable>
+
       {coverId ? (
         <Image
           source={{
@@ -129,6 +136,23 @@ const styles = StyleSheet.create({
     padding: 24,
     paddingTop: 70,
     minHeight: "100%",
+  },
+
+  backButton: {
+    alignSelf: "flex-start",
+    backgroundColor: "#F6FFF2",
+    borderWidth: 2,
+    borderColor: "black",
+    borderRadius: 14,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    marginBottom: 24,
+  },
+
+  backButtonText: {
+    color: "#3F6F44",
+    fontSize: 16,
+    fontWeight: "700",
   },
 
   cover: {
