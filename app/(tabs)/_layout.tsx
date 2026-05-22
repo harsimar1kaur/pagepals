@@ -1,33 +1,53 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { Tabs } from "expo-router";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
-        tabBarButton: HapticTab,
-      }}>
+
+        tabBarStyle: {
+          backgroundColor: "#F6FFF2",
+          borderTopWidth: 0,
+          height: 70,
+          paddingBottom: 10,
+          paddingTop: 10,
+        },
+
+        tabBarActiveTintColor: "#3F6F44",
+        tabBarInactiveTintColor: "#7A927B",
+
+        tabBarLabelStyle: {
+          fontSize: 14,
+          fontWeight: "600",
+        },
+      }}
+    >
       <Tabs.Screen
-        name="index"
+        name="search"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: "Search",
         }}
       />
+      
       <Tabs.Screen
-        name="explore"
+        name="books"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: "Books",
+        }}
+      />
+
+      <Tabs.Screen
+        name="library"
+        options={{
+          title: "Library",
+        }}
+      />
+
+      <Tabs.Screen
+        name="pets"
+        options={{
+          title: "Pets",
         }}
       />
     </Tabs>

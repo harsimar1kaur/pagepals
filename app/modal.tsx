@@ -1,29 +1,54 @@
-import { Link } from 'expo-router';
-import { StyleSheet } from 'react-native';
-
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
+import { View, Text, StyleSheet } from "react-native";
+import { Link } from "expo-router";
 
 export default function ModalScreen() {
   return (
-    <ThemedView style={styles.container}>
-      <ThemedText type="title">This is a modal</ThemedText>
-      <Link href="/" dismissTo style={styles.link}>
-        <ThemedText type="link">Go to home screen</ThemedText>
+    <View style={styles.container}>
+      <Text style={styles.title}>PagePals</Text>
+
+      <Text style={styles.subtitle}>
+        This page will be used for settings or special events later.
+      </Text>
+
+      <Link href="/(tabs)" style={styles.button}>
+        Back Home
       </Link>
-    </ThemedView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
+    backgroundColor: "#DFF2D8",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 24,
   },
-  link: {
-    marginTop: 15,
-    paddingVertical: 15,
+
+  title: {
+    fontSize: 42,
+    fontWeight: "800",
+    color: "#3F6F44",
+    marginBottom: 12,
+  },
+
+  subtitle: {
+    fontSize: 18,
+    color: "#526B55",
+    textAlign: "center",
+    maxWidth: 300,
+    marginBottom: 28,
+  },
+
+  button: {
+    backgroundColor: "#4F7A4F",
+    color: "white",
+    fontSize: 18,
+    fontWeight: "600",
+    paddingVertical: 14,
+    paddingHorizontal: 32,
+    borderRadius: 20,
+    overflow: "hidden",
   },
 });
