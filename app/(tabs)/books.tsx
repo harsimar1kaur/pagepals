@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function BooksScreen() {
   return (
@@ -10,25 +10,21 @@ export default function BooksScreen() {
       </Text>
 
       <Pressable style={styles.card}>
-        <Text style={styles.emoji}>🌱</Text>
         <Text style={styles.cardTitle}>Want to Read</Text>
         <Text style={styles.cardSubtitle}>Books you want to start later</Text>
       </Pressable>
 
       <Pressable style={styles.card}>
-        <Text style={styles.emoji}>📖</Text>
         <Text style={styles.cardTitle}>Reading</Text>
         <Text style={styles.cardSubtitle}>Books you are reading now</Text>
       </Pressable>
 
       <Pressable style={styles.card}>
-        <Text style={styles.emoji}>✨</Text>
         <Text style={styles.cardTitle}>Finished</Text>
         <Text style={styles.cardSubtitle}>Books you completed</Text>
       </Pressable>
 
       <Pressable style={styles.card}>
-        <Text style={styles.emoji}>🍂</Text>
         <Text style={styles.cardTitle}>DNF</Text>
         <Text style={styles.cardSubtitle}>Books you did not finish</Text>
       </Pressable>
